@@ -26,14 +26,24 @@ export async function registerUser(nombre, email, password) {
 
 // Borrar usuarios
 
-export async function deleteUser(id) {
+export const deleteUser = async (id) => {
+  const token = sessionStorage.getItem("token");
+
   const res = await fetch(`${API_URL}/users/${id}`, {
     method: "DELETE",
-    credentials: "include",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
-  if (!res.ok) throw new Error("Error al eliminar usuario");
+
+  if (!res.ok) {
+    const errText = await res.text();
+    console.error("Respuesta backend:", errText);
+    throw new Error("Error al eliminar usuario");
+  }
+
   return res.json();
-}
+};
 
 // Cerrar sesión
 export async function logoutUser() {
@@ -89,3 +99,23 @@ export async function getRestaurantes() {
   if (!res.ok) throw new Error("Error al obtener restaurantes");
   return res.json();
 }
+
+// Actualizar usuario
+export const updateUser = async (id, updatedData) => {
+  const token = sessionStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/users/${id}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updatedData),
+  });
+
+  if (!res.ok) {
+    throw new Error("Error al actualizar usuario");
+  }
+
+  return res.json();
+};
