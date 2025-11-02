@@ -48,7 +48,7 @@ export default function Navbar() {
                 Usuarios
               </NavLink>
             </li>
-            {user?.role === "admin" && (
+            {user?.rol === "admin" && (
               <li className="nav-item ms-lg-3">
                 <NavLink
                   className="btn btn-outline-light btn-sm"

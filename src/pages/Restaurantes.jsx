@@ -53,6 +53,7 @@ export default function Restaurants() {
     setSuccess("");
 
     try {
+      console.log("Iniciando creación de restaurante...");
       const nuevoRestaurante = {
         nombre,
         descripcion,
@@ -60,9 +61,11 @@ export default function Restaurants() {
         especialidad,
         telefono,
         imagen,
+        categoria: null,
       };
 
       await createRestaurant(nuevoRestaurante);
+      console.log("Restaurante creado exitosamente");
       setSuccess("Restaurante agregado correctamente 🍽️");
 
       // limpiar campos
@@ -152,7 +155,8 @@ export default function Restaurants() {
       {user?.rol === "admin" && (
         <form
           onSubmit={handleSubmit}
-          className="bg-dark p-4 rounded shadow mb-5"
+          className="bg-dark p-4 rounded shadow mx-auto mt-5"
+          style={{ maxWidth: "600px", marginBottom: "3rem" }}
         >
           <h4 className="mb-3">Agregar nuevo restaurante</h4>
 
@@ -297,10 +301,10 @@ export default function Restaurants() {
                   onClick={closeConfirm}
                 ></button>
               </div>
-              <div className="modal-body">
+              <div className="modal-body d-flex justify-content-center gap-2">
                 <p>¿Seguro que deseas eliminar este restaurante?</p>
               </div>
-              <div className="modal-footer border-0">
+              <div className="modal-footer border-0 d-flex justify-content-center gap-2">
                 <button
                   className="btn btn-danger w-50"
                   onClick={confirmDeleteRestaurant}

@@ -147,9 +147,13 @@ export const updateRestaurant = async (id, updatedData) => {
 };
 //Crear restaurante
 export const createRestaurant = async (restauranteData) => {
+  console.log("Entrando a createRestaurant con:", restauranteData);
   const res = await fetch(`${API_URL}/restaurantes`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // 👈 necesario para rutas protegidas
+    },
     body: JSON.stringify(restauranteData),
   });
   if (!res.ok) throw new Error("Error al crear restaurante");
