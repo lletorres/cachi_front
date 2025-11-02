@@ -13,16 +13,17 @@ export async function loginUser(email, password) {
   return res.json();
 }
 
-// Registrarse
-export async function registerUser(nombre, email, password) {
-  const res = await fetch(`${API_URL}/users/register`, {
+// Registrar usuario
+export const registerUser = async (nombre, apellido, email, password) => {
+  const res = await fetch(`${API_URL}/users`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nombre, email, password }),
+    body: JSON.stringify({ nombre, apellido, email, password }),
   });
-  if (!res.ok) throw new Error("Error al registrarse");
-  return res.json();
-}
+
+  if (!res.ok) throw new Error("Error al registrar usuario");
+  return await res.json();
+};
 
 // Borrar usuarios
 
@@ -93,13 +94,6 @@ export async function getExcursiones() {
   return res.json();
 }
 
-// Obtener restaurantes
-export async function getRestaurantes() {
-  const res = await fetch(`${API_URL}/restaurantes`);
-  if (!res.ok) throw new Error("Error al obtener restaurantes");
-  return res.json();
-}
-
 // Actualizar usuario
 export const updateUser = async (id, updatedData) => {
   const token = sessionStorage.getItem("token");
@@ -118,4 +112,54 @@ export const updateUser = async (id, updatedData) => {
   }
 
   return res.json();
+};
+
+// Obtener restaurantes
+
+export async function getRestaurants() {
+  try {
+    const res = await fetch(`${API_URL}/restaurantes`, {
+      method: "GET",
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("Respuesta del backend:", errorText);
+      throw new Error("Error al obtener restaurantes");
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("Error en getRestaurants:", error);
+    throw error;
+  }
+}
+
+//editar restaurante
+export const updateRestaurant = async (id, updatedData) => {
+  const res = await fetch(`${API_URL}/restaurantes/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedData),
+  });
+  if (!res.ok) throw new Error("Error al actualizar restaurante");
+  return await res.json();
+};
+//Crear restaurante
+export const createRestaurant = async (restauranteData) => {
+  const res = await fetch(`${API_URL}/restaurantes`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(restauranteData),
+  });
+  if (!res.ok) throw new Error("Error al crear restaurante");
+  return await res.json();
+};
+//borrar restaurante
+export const deleteRestaurant = async (id) => {
+  const res = await fetch(`${API_URL}/restaurantes/${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) throw new Error("Error al eliminar restaurante");
+  return await res.json();
 };
