@@ -80,20 +80,6 @@ export async function getCategorias() {
   return res.json();
 }
 
-// Obtener alojamientos
-export async function getAlojamientos() {
-  const res = await fetch(`${API_URL}/alojamientos`);
-  if (!res.ok) throw new Error("Error al obtener alojamientos");
-  return res.json();
-}
-
-// Obtener excursiones
-export async function getExcursiones() {
-  const res = await fetch(`${API_URL}/excursiones`);
-  if (!res.ok) throw new Error("Error al obtener excursiones");
-  return res.json();
-}
-
 // Actualizar usuario
 export const updateUser = async (id, updatedData) => {
   const token = sessionStorage.getItem("token");
@@ -137,17 +123,24 @@ export async function getRestaurants() {
 
 //editar restaurante
 export const updateRestaurant = async (id, updatedData) => {
+  const token = sessionStorage.getItem("token"); // 👈 AGREGAR
+
   const res = await fetch(`${API_URL}/restaurantes/${id}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // 👈 AGREGAR
+    },
     body: JSON.stringify(updatedData),
   });
   if (!res.ok) throw new Error("Error al actualizar restaurante");
   return await res.json();
 };
+
 //Crear restaurante
 export const createRestaurant = async (restauranteData) => {
   console.log("Entrando a createRestaurant con:", restauranteData);
+  const token = sessionStorage.getItem("token");
   const res = await fetch(`${API_URL}/restaurantes`, {
     method: "POST",
     headers: {
@@ -161,9 +154,106 @@ export const createRestaurant = async (restauranteData) => {
 };
 //borrar restaurante
 export const deleteRestaurant = async (id) => {
+  const token = sessionStorage.getItem("token"); // 👈 AGREGAR
+
   const res = await fetch(`${API_URL}/restaurantes/${id}`, {
     method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`, // 👈 AGREGAR
+    },
   });
   if (!res.ok) throw new Error("Error al eliminar restaurante");
+  return await res.json();
+};
+
+export const getAlojamientos = async () => {
+  const res = await fetch(`${API_URL}/alojamientos`);
+  if (!res.ok) throw new Error("Error al obtener alojamientos");
+  return await res.json();
+};
+
+export const createAlojamiento = async (data) => {
+  const token = sessionStorage.getItem("token");
+  const res = await fetch(`${API_URL}/alojamientos`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Error al crear alojamiento");
+  return await res.json();
+};
+
+export const updateAlojamiento = async (id, data) => {
+  const token = sessionStorage.getItem("token");
+  const res = await fetch(`${API_URL}/alojamientos/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Error al actualizar alojamiento");
+  return await res.json();
+};
+
+export const deleteAlojamiento = async (id) => {
+  const token = sessionStorage.getItem("token");
+  const res = await fetch(`${API_URL}/alojamientos/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Error al eliminar alojamiento");
+};
+// Obtener excursiones
+export const getExcursiones = async () => {
+  const res = await fetch(`${API_URL}/excursiones`);
+  if (!res.ok) throw new Error("Error al obtener excursiones");
+  return await res.json();
+};
+
+// Crear excursión
+export const createExcursion = async (data) => {
+  const token = sessionStorage.getItem("token");
+  const res = await fetch(`${API_URL}/excursiones`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Error al crear excursión");
+  return await res.json();
+};
+
+// Actualizar excursión
+export const updateExcursion = async (id, data) => {
+  const token = sessionStorage.getItem("token");
+  const res = await fetch(`${API_URL}/excursiones/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Error al actualizar excursión");
+  return await res.json();
+};
+
+// Eliminar excursión
+export const deleteExcursion = async (id) => {
+  const token = sessionStorage.getItem("token");
+  const res = await fetch(`${API_URL}/excursiones/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) throw new Error("Error al eliminar excursión");
   return await res.json();
 };

@@ -4,17 +4,19 @@ import {
   createRestaurant,
   deleteRestaurant,
   updateRestaurant,
+  getCategorias,
 } from "../services/api";
 import { useUser } from "../context/UserContext";
 
 export default function Restaurants() {
-  const { user } = useUser(); // usuario actual
+  const { user } = useUser();
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [direccion, setDireccion] = useState("");
   const [especialidad, setEspecialidad] = useState("");
   const [telefono, setTelefono] = useState("");
   const [imagen, setImagen] = useState("");
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -24,6 +26,8 @@ export default function Restaurants() {
   const [restaurantToDelete, setRestaurantToDelete] = useState(null);
   const [editingRestaurant, setEditingRestaurant] = useState(null);
   const [visiblePhones, setVisiblePhones] = useState({});
+  const [categorias, setCategorias] = useState([]);
+  const [filtroCategoria, setFiltroCategoria] = useState(""); // 👈 NUEVO
   const [editData, setEditData] = useState({
     nombre: "",
     descripcion: "",
@@ -31,20 +35,34 @@ export default function Restaurants() {
     especialidad: "",
     telefono: "",
     imagen: "",
+    categoria: "",
   });
 
-  // Cargar restaurantes al iniciar
+  // Cargar restaurantes y categorías al iniciar
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getRestaurants();
-        setRestaurants(data);
+        const [restaurantesData, categoriasData] = await Promise.all([
+          getRestaurants(),
+          getCategorias(),
+        ]);
+        setRestaurants(restaurantesData);
+        // Filtrar solo categorías de tipo "Restaurante"
+        const categoriasRestaurante = categoriasData.filter(
+          (c) => c.tipo === "Restaurante"
+        );
+        setCategorias(categoriasRestaurante);
       } catch (error) {
-        console.error("Error al cargar restaurantes:", error);
+        console.error("Error al cargar datos:", error);
       }
     };
     fetchData();
   }, []);
+
+  // 👇 NUEVO: Filtrar restaurantes según categoría seleccionada
+  const restaurantesFiltrados = filtroCategoria
+    ? restaurants.filter((r) => r.categoria?._id === filtroCategoria)
+    : restaurants;
 
   // Crear restaurante (solo admin)
   const handleSubmit = async (e) => {
@@ -53,7 +71,6 @@ export default function Restaurants() {
     setSuccess("");
 
     try {
-      console.log("Iniciando creación de restaurante...");
       const nuevoRestaurante = {
         nombre,
         descripcion,
@@ -61,11 +78,10 @@ export default function Restaurants() {
         especialidad,
         telefono,
         imagen,
-        categoria: null,
+        categoria: categoriaSeleccionada || null,
       };
 
       await createRestaurant(nuevoRestaurante);
-      console.log("Restaurante creado exitosamente");
       setSuccess("Restaurante agregado correctamente 🍽️");
 
       // limpiar campos
@@ -75,6 +91,7 @@ export default function Restaurants() {
       setEspecialidad("");
       setTelefono("");
       setImagen("");
+      setCategoriaSeleccionada("");
 
       // recargar lista
       const data = await getRestaurants();
@@ -84,7 +101,6 @@ export default function Restaurants() {
     }
   };
 
-  // Mostrar teléfono o modal
   const handleVerContacto = (id) => {
     if (user) {
       setVisiblePhones((prev) => ({ ...prev, [id]: true }));
@@ -96,7 +112,6 @@ export default function Restaurants() {
     }
   };
 
-  // Eliminar restaurante
   const handleDeleteClick = (id) => {
     setRestaurantToDelete(id);
     setConfirmDelete(true);
@@ -117,7 +132,6 @@ export default function Restaurants() {
     }
   };
 
-  // Editar restaurante
   const handleEditClick = (r) => {
     setEditingRestaurant(r);
     setEditData({
@@ -127,6 +141,7 @@ export default function Restaurants() {
       especialidad: r.especialidad,
       telefono: r.telefono,
       imagen: r.imagen,
+      categoria: r.categoria?._id || "", // 👈 CAMBIAR por r.categoria?._id
     });
   };
 
@@ -147,9 +162,38 @@ export default function Restaurants() {
   const closeConfirm = () => setConfirmDelete(false);
   const closeEdit = () => setEditingRestaurant(null);
 
+  // Función para obtener nombre de categoría
+  const getNombreCategoria = (categoriaObj) => {
+    if (!categoriaObj) return "";
+    // Si ya es un objeto con nombre, usalo directamente
+    if (categoriaObj.nombre) return categoriaObj.nombre;
+    // Si es solo un ID, buscalo en el array
+    const cat = categorias.find((c) => c._id === categoriaObj);
+    return cat ? cat.nombre : "";
+  };
+  console.log("Restaurantes filtrados:", restaurantesFiltrados);
+  console.log("Primer restaurante:", restaurantesFiltrados[0]);
   return (
     <div className="container mt-5 text-light">
       <h2 className="mb-4">Restaurantes</h2>
+
+      {/* 👇 NUEVO: Filtro de categorías */}
+      <div className="mb-4">
+        <label className="form-label">Filtrar por categoría:</label>
+        <select
+          className="form-select"
+          value={filtroCategoria}
+          onChange={(e) => setFiltroCategoria(e.target.value)}
+          style={{ maxWidth: "300px" }}
+        >
+          <option value="">Todas las categorías</option>
+          {categorias.map((cat) => (
+            <option key={cat._id} value={cat._id}>
+              {cat.nombre}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Formulario solo para admin */}
       {user?.rol === "admin" && (
@@ -204,6 +248,21 @@ export default function Restaurants() {
             value={imagen}
             onChange={(e) => setImagen(e.target.value)}
           />
+
+          {/* 👇 NUEVO: Select de categoría */}
+          <select
+            className="form-select mb-3"
+            value={categoriaSeleccionada}
+            onChange={(e) => setCategoriaSeleccionada(e.target.value)}
+          >
+            <option value="">Sin categoría</option>
+            {categorias.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.nombre}
+              </option>
+            ))}
+          </select>
+
           <button type="submit" className="btn btn-primary w-100">
             Guardar restaurante
           </button>
@@ -215,7 +274,7 @@ export default function Restaurants() {
 
       {/* Listado de restaurantes */}
       <div className="row">
-        {restaurants.map((r) => (
+        {restaurantesFiltrados.map((r) => (
           <div key={r._id} className="col-md-4 mb-4">
             <div className="card bg-dark text-light h-100">
               {r.imagen && (
@@ -228,6 +287,12 @@ export default function Restaurants() {
               )}
               <div className="card-body">
                 <h5 className="card-title">{r.nombre}</h5>
+                {/* 👇 NUEVO: Mostrar categoría */}
+                {r.categoria && (
+                  <span className="badge bg-primary mb-2">
+                    {getNombreCategoria(r.categoria)}
+                  </span>
+                )}
                 <p className="card-text">{r.descripcion}</p>
                 <p className="text-white mb-1">📍 {r.direccion}</p>
                 <p className="text-white mb-1">🍴 {r.especialidad}</p>
@@ -339,21 +404,41 @@ export default function Restaurants() {
                 ></button>
               </div>
               <div className="modal-body">
-                {Object.keys(editData).map((field) => (
-                  <div className="mb-3" key={field}>
-                    <label>
-                      {field.charAt(0).toUpperCase() + field.slice(1)}
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={editData[field]}
-                      onChange={(e) =>
-                        setEditData({ ...editData, [field]: e.target.value })
-                      }
-                    />
-                  </div>
-                ))}
+                {Object.keys(editData)
+                  .filter((field) => field !== "categoria")
+                  .map((field) => (
+                    <div className="mb-3" key={field}>
+                      <label>
+                        {field.charAt(0).toUpperCase() + field.slice(1)}
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={editData[field] || ""}
+                        onChange={(e) =>
+                          setEditData({ ...editData, [field]: e.target.value })
+                        }
+                      />
+                    </div>
+                  ))}
+                {/* 👇 NUEVO: Select de categoría en modal editar */}
+                <div className="mb-3">
+                  <label>Categoría</label>
+                  <select
+                    className="form-select"
+                    value={editData.categoria || ""}
+                    onChange={(e) =>
+                      setEditData({ ...editData, categoria: e.target.value })
+                    }
+                  >
+                    <option value="">Sin categoría</option>
+                    {categorias.map((cat) => (
+                      <option key={cat._id} value={cat._id}>
+                        {cat.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <div className="modal-footer border-0">
                 <button className="btn btn-success w-50" onClick={handleUpdate}>
