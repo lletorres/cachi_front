@@ -175,7 +175,7 @@ export default function Restaurants() {
   console.log("Primer restaurante:", restaurantesFiltrados[0]);
   return (
     <div className="container mt-5 text-light">
-      <h2 className="mb-4">Restaurantes</h2>
+      <h2 className="mb-4 text-center">Restaurantes</h2>
 
       {/* 👇 NUEVO: Filtro de categorías */}
       <div className="mb-4">

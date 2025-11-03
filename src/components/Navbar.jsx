@@ -1,13 +1,25 @@
 import { NavLink } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import logo from "../assets/cachiexplorer.png";
 
 export default function Navbar() {
   const { user, logout } = useUser();
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark glass sticky-top">
+    <nav className="navbar navbar-expand-lg navbar-dark glass sticky-top py-2">
+      {/* 👆 Agregá py-2 para reducir padding vertical */}
       <div className="container">
-        <NavLink className="navbar-brand fw-bold" to="/">
-          Cachi Explorer
+        <NavLink
+          className="navbar-brand fw-bold d-flex align-items-center"
+          to="../pages/Home.jsx"
+        >
+          <img
+            src={logo}
+            alt="Cachi Explorer"
+            style={{
+              height: "70px",
+              width: "auto",
+            }}
+          />
         </NavLink>
         <button
           className="navbar-toggler"
@@ -20,7 +32,6 @@ export default function Navbar() {
 
         <div className="collapse navbar-collapse" id="nav">
           <ul className="navbar-nav ms-auto">
-            {/* 🔹 Nuevo link Home */}
             <li className="nav-item">
               <NavLink className="nav-link" to="/">
                 Home
@@ -32,28 +43,36 @@ export default function Navbar() {
                 Excursiones
               </NavLink>
             </li>
+
             <li className="nav-item">
               <NavLink className="nav-link" to="/restaurantes">
                 Restaurantes
               </NavLink>
             </li>
+
             <li className="nav-item">
               <NavLink className="nav-link" to="/alojamientos">
                 Alojamientos
               </NavLink>
             </li>
 
-            <li className="nav-item ms-lg-3">
-              <NavLink className="btn btn-outline-light btn-sm" to="/usuarios">
-                Usuarios
+            <li className="nav-item">
+              <NavLink
+                className="nav-link"
+                to="/usuarios"
+                style={{
+                  background: "rgba(255, 255, 255, 0.1)",
+                  border: "1px solid rgba(255, 255, 255, 0.3)",
+                  borderRadius: "5px",
+                  padding: "0.375rem 1rem",
+                }}
+              >
+                Iniciar sesión
               </NavLink>
             </li>
             {user?.rol === "admin" && (
-              <li className="nav-item ms-lg-3">
-                <NavLink
-                  className="btn btn-outline-light btn-sm"
-                  to="/admin/users"
-                >
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/admin/users">
                   Admin
                 </NavLink>
               </li>

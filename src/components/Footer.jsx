@@ -7,7 +7,7 @@ export default function Footer() {
           los derechos reservados.
         </p>
         <small className="text-muted">
-          Desarrollado por <span className="text-light">Lean Torres</span>
+          Desarrollado por <span className="text-light">Leandro Torres</span>
         </small>
       </div>
     </footer>

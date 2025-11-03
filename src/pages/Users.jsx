@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { loginUser, registerUser } from "../services/api";
 import { useUser } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Users() {
-  const { login } = useUser();
+  const { user, login, logout } = useUser();
+  const navigate = useNavigate();
   const [isRegister, setIsRegister] = useState(false);
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
@@ -19,7 +21,7 @@ export default function Users() {
     setPassword("");
   };
 
-  // 🔑 Iniciar sesión
+  // Iniciar sesión
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -34,7 +36,7 @@ export default function Users() {
     }
   };
 
-  // 🆕 Registrar usuario nuevo
+  // Registrar usuario nuevo
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
@@ -48,9 +50,59 @@ export default function Users() {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    sessionStorage.removeItem("token");
+    setSuccess("Sesión cerrada correctamente 👋");
+  };
+
+  // 👇 NUEVO: Si ya hay sesión activa, mostrar mensaje
+  if (user) {
+    return (
+      <div className="container mt-5 text-light">
+        <div className="row justify-content-center">
+          <div className="col-md-6 col-lg-4">
+            <div className="card bg-dark text-light shadow">
+              <div className="card-body text-center p-5">
+                <div className="mb-4">
+                  <span className="display-1">✅</span>
+                </div>
+                <h3 className="mb-3">Sesión activa</h3>
+                <p className="text-muted mb-1">Bienvenido/a</p>
+                <h5 className="mb-4">
+                  {user.nombre} {user.apellido}
+                </h5>
+
+                {success && (
+                  <div className="alert alert-success mb-3">{success}</div>
+                )}
+
+                <div className="d-grid gap-2">
+                  <button
+                    className="btn btn-outline-primary"
+                    onClick={() => navigate("/")}
+                  >
+                    Ir al inicio
+                  </button>
+                  <button
+                    className="btn btn-outline-danger"
+                    onClick={handleLogout}
+                  >
+                    Cerrar sesión
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 👇 Si NO hay sesión, mostrar formulario de login/registro
   return (
     <div className="container mt-5 text-light">
-      <h2 className="mb-4">
+      <h2 className="mb-4 text-center">
         {isRegister ? "Registro de nuevo usuario" : "Iniciar sesión"}
       </h2>
       <div className="col-md-6 offset-md-3 col-lg-4 offset-lg-4">
