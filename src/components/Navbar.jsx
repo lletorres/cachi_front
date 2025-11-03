@@ -73,7 +73,7 @@ export default function Navbar() {
             {user?.rol === "admin" && (
               <li className="nav-item">
                 <NavLink className="nav-link" to="/admin/users">
-                  Admin
+                  Users
                 </NavLink>
               </li>
             )}

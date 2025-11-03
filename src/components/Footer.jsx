@@ -6,7 +6,7 @@ export default function Footer() {
           © {new Date().getFullYear()} <strong>Cachi Explorer</strong> — Todos
           los derechos reservados.
         </p>
-        <small className="text-muted">
+        <small className="text-light">
           Desarrollado por <span className="text-light">Leandro Torres</span>
         </small>
       </div>
