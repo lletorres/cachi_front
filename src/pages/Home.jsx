@@ -93,7 +93,7 @@ export default function Home() {
           <div className="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h2 className="h3 text-light mb-1">🏔️ Excursiones destacadas</h2>
-              <p className="text-muted mb-0">
+              <p className="text-light mb-0">
                 Aventuras en los valles calchaquíes
               </p>
             </div>
@@ -125,14 +125,14 @@ export default function Home() {
                       </span>
                     )}
                     <h5 className="card-title">{exc.nombre}</h5>
-                    <p className="card-text text-muted small">
+                    <p className="card-text text-light small">
                       {exc.descripcion.substring(0, 80)}...
                     </p>
                     <div className="d-flex justify-content-between align-items-center mt-3">
                       <span className="text-warning fw-bold">
                         ${exc.precio}
                       </span>
-                      <span className="small text-muted">
+                      <span className="small text-light">
                         ⏱️ {exc.duracion}
                       </span>
                     </div>
@@ -153,7 +153,7 @@ export default function Home() {
           <div className="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h2 className="h3 text-light mb-1">🍴 Gastronomía local</h2>
-              <p className="text-muted mb-0">Sabores auténticos de la región</p>
+              <p className="text-light mb-0">Sabores auténticos de la región</p>
             </div>
             <button
               onClick={() => navigate("/restaurantes")}
@@ -183,7 +183,7 @@ export default function Home() {
                       </span>
                     )}
                     <h5 className="card-title">{rest.nombre}</h5>
-                    <p className="card-text text-muted small">
+                    <p className="card-text text-light small">
                       {rest.descripcion.substring(0, 80)}...
                     </p>
                     <div className="mt-3">
@@ -205,7 +205,7 @@ export default function Home() {
           <div className="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h2 className="h3 text-light mb-1">🏡 Donde alojarte</h2>
-              <p className="text-muted mb-0">Descansá en los mejores lugares</p>
+              <p className="text-light mb-0">Descansá en los mejores lugares</p>
             </div>
             <button
               onClick={() => navigate("/alojamientos")}
@@ -235,14 +235,14 @@ export default function Home() {
                       </span>
                     )}
                     <h5 className="card-title">{aloj.nombre}</h5>
-                    <p className="card-text text-muted small">
+                    <p className="card-text text-light small">
                       {aloj.descripcion.substring(0, 80)}...
                     </p>
                     <div className="d-flex justify-content-between align-items-center mt-3">
                       <span className="text-success fw-bold">
                         ${aloj.precioPorNoche}
                       </span>
-                      <span className="small text-muted">por noche</span>
+                      <span className="small text-light">por noche</span>
                     </div>
                   </div>
                 </div>
