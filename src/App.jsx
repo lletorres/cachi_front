@@ -7,6 +7,7 @@ import Restaurantes from "./pages/Restaurantes";
 import Alojamientos from "./pages/Alojamientos";
 import Users from "./pages/Users";
 import AdminUsers from "./pages/AdminUsers";
+import AdminCategories from "./pages/AdminCategories";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/alojamientos" element={<Alojamientos />} />
           <Route path="/usuarios" element={<Users />} />
           <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="/admin/categorias" element={<AdminCategories />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>

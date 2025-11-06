@@ -71,11 +71,18 @@ export default function Navbar() {
               </NavLink>
             </li>
             {user?.rol === "admin" && (
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/admin/users">
-                  Users
-                </NavLink>
-              </li>
+              <ul>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/admin/users">
+                    Users
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink className="dropdown-item" to="/admin/categorias">
+                    Categorías
+                  </NavLink>
+                </li>
+              </ul>
             )}
           </ul>
         </div>
