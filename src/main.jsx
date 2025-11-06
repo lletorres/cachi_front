@@ -6,7 +6,7 @@ import { UserProvider } from "./context/UserContext";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import "./styles/custom.css"; // <- tu capa de estilos
+import "./styles/custom.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
