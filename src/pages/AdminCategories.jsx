@@ -142,12 +142,6 @@ export default function AdminCategories() {
     <div className="container mt-5 text-light">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>Gestión de Categorías</h2>
-        <button
-          className="btn btn-outline-light"
-          onClick={() => navigate("/admin/users")}
-        >
-          Ver Usuarios
-        </button>
       </div>
 
       {/* Formulario crear */}

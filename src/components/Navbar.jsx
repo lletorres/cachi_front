@@ -71,18 +71,29 @@ export default function Navbar() {
               </NavLink>
             </li>
             {user?.rol === "admin" && (
-              <ul>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/admin/users">
-                    Users
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink className="dropdown-item" to="/admin/categorias">
-                    Categorías
-                  </NavLink>
-                </li>
-              </ul>
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Admin
+                </a>
+                <ul className="dropdown-menu dropdown-menu-dark">
+                  <li>
+                    <NavLink className="dropdown-item" to="/admin/users">
+                      Usuarios
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink className="dropdown-item" to="/admin/categorias">
+                      Categorías
+                    </NavLink>
+                  </li>
+                </ul>
+              </li>
             )}
           </ul>
         </div>
